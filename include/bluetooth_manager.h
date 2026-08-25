@@ -21,7 +21,7 @@ private:
   BLEIntCharacteristic control_characteristic;
   BLEDevice central;
 
-  const StateProcessor& state_processor;
+  StateProcessor& state_processor;
   const JetpackState& current_state;
   
   ConnectionState last_connection_state;

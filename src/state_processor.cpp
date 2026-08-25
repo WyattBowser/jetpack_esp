@@ -3,6 +3,7 @@
 StateProcessor::StateProcessor(JetpackState& state) : shared_jetpack_state(state), last_state(state){};
 
 void StateProcessor::process() {
+  /*
   if (shared_jetpack_state == DISARMED) { return; }
   if (user_triggered_spool_down) {
     Serial.println("User Triggered Spooldown"); 
@@ -15,14 +16,17 @@ void StateProcessor::process() {
     user_triggered_spool_down = false;
     return;
   }
+  */
 
   if(last_state != shared_jetpack_state) {
     initNewState();
   }
 
   if (millis() - state_start_time > TIMERS[shared_jetpack_state]) {
-    shared_jetpack_state++;
-    initNewState();
+      if (shared_jetpack_state != DISARMED) {
+      shared_jetpack_state++;
+      initNewState();
+    }
   }
 }
 
@@ -33,6 +37,14 @@ void StateProcessor::initNewState() {
   Serial.println(toString(shared_jetpack_state));
 }
 
-void StateProcessor::userTriggeredSpooldown() {
-  user_triggered_spool_down = true;
+void StateProcessor::triggerSpoolDown() {
+  shared_jetpack_state = SPOOLING_DOWN;
+}
+
+void StateProcessor::triggerSpoolUp() {
+  shared_jetpack_state = SPOOLING_UP;
+}
+
+void StateProcessor::triggerForcedDisarm() {
+  shared_jetpack_state = DISARMED;
 }

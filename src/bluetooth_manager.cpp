@@ -43,15 +43,16 @@ void BluetoothManager::process() {
         switch (control) {
           case JetpackState::SPOOLING_UP:
             Serial.println("Jetpack BT got command to spool up");
-            //Start full sequence
+            state_processor.triggerSpoolUp();
             break;
           case JetpackState::SPOOLING_DOWN:
             Serial.println("Jetpack BT got command to spool down");
-            //Start spooldown sequenc
+            state_processor.triggerSpoolDown();
             break;
           case JetpackState::DISARMED:
             Serial.println("Jetpack BT got command to force stop");
             //hard stop everything
+            state_processor.triggerForcedDisarm();
             break;
         }
       }

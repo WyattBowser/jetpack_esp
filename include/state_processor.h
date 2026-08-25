@@ -6,7 +6,9 @@ class StateProcessor {
 public:
   StateProcessor(JetpackState& state);
   void process();
-  void userTriggeredSpooldown();
+  void triggerSpoolUp();
+  void triggerSpoolDown();
+  void triggerForcedDisarm();
 
 private:
   JetpackState& shared_jetpack_state;

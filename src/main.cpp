@@ -14,17 +14,12 @@ FogMachineManager fog_manager(current_state);
 FlameEffectManager flame_manager(current_state);
 VariableNozzleManager nozzle_manager(current_state);
 
-void userTriggeredSpooldown() {
-  state_processor.userTriggeredSpooldown();
-  sfx_manager.userTriggeredSpooldown();
-}
-
-
 void processStateProcessor(void* params) {
   StateProcessor* state_processor = static_cast<StateProcessor*>(params);
   Serial.println("Starting state Processor...");
 
   for(;;) {
+     /*
     //Manual Trigger for testing purposes
     if (current_state == DISARMED) {
       Serial.println("Resetting State...");
@@ -32,7 +27,7 @@ void processStateProcessor(void* params) {
       current_state = SPOOLING_UP;
       Serial.println("Reset Complete");
     }
-
+    */
     state_processor->process();
     vTaskDelay(1);
   }
