@@ -6,6 +6,7 @@
 #include "fog_machine_manager.h"
 #include "flame_effect_manager.h"
 #include "variable_nozzle_manager.h"
+#include "bluetooth_manager.h"
 
 JetpackState current_state = DISARMED;
 StateProcessor state_processor(current_state);
@@ -13,6 +14,7 @@ SoundEffectManager sfx_manager(current_state);
 FogMachineManager fog_manager(current_state);
 FlameEffectManager flame_manager(current_state);
 VariableNozzleManager nozzle_manager(current_state);
+BluetoothManager bt_manager(state_processor, current_state);
 
 void processStateProcessor(void* params) {
   StateProcessor* state_processor = static_cast<StateProcessor*>(params);
@@ -69,18 +71,29 @@ void processVariableNozzleManager(void* params) {
   }
 }
 
+void processBluetoothManager(void* params) {
+  BluetoothManager* bt_manager = static_cast<BluetoothManager*>(params);
+  Serial.println("Starting BT Manager processing"); 
+  for (;;) {
+    bt_manager->process();
+    vTaskDelay(1);
+  }
+}
 
 void setup() {
   Serial.begin(115200);
   Serial.println("Starting...");
   flame_manager.init();
+  bt_manager.init();
   xTaskCreate(processStateProcessor, "State Processing", 4096, &state_processor, 0, nullptr);
   xTaskCreate(processSoundEffectsManager, "SFX Processing", 8192, &sfx_manager, 0, nullptr);
   xTaskCreate(processFogMachineManager, "Fog Machine Processing", 4096, &fog_manager, 0, nullptr);
   xTaskCreate(processFlameEffectManager, "Flame Effect Processing", 4096, &flame_manager, 0, nullptr);
   xTaskCreate(processVariableNozzleManager, "Variable Nozzle Processing", 4096, &nozzle_manager, 0, nullptr);
+  xTaskCreate(processBluetoothManager, "BT Processing", 4096, &bt_manager, 0, nullptr);
 }
 
 void loop() {
-
+  Serial.println("HB");
+  vTaskDelay(1000);
 }

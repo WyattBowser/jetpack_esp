@@ -42,7 +42,12 @@ void StateProcessor::triggerSpoolDown() {
 }
 
 void StateProcessor::triggerSpoolUp() {
-  shared_jetpack_state = SPOOLING_UP;
+  if (shared_jetpack_state == SPOOLING_DOWN) {
+    Serial.println("State processor is already spooling down. Forcing shutdown");
+    triggerForcedDisarm();
+  } else {
+    shared_jetpack_state = SPOOLING_UP;
+  }
 }
 
 void StateProcessor::triggerForcedDisarm() {
