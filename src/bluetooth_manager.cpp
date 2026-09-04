@@ -1,11 +1,14 @@
 #include "bluetooth_manager.h"
 
+BluetoothManager* BluetoothManager::instance = nullptr;
+
 BluetoothManager::BluetoothManager(StateProcessor& state_proc, JetpackState& state) :
-  state_processor(state_proc), 
+  state_processor(state_proc),
   current_state(state),
   control_characteristic(CONTROL_UUID, BLEWrite),
   state_characteristic(STATE_UUID, BLERead | BLENotify) {
     last_connection_state = DISCONNECTED;
+    instance = this;
 }
 
 void BluetoothManager::init() {
@@ -26,6 +29,7 @@ void BluetoothManager::init() {
   BLE.setAdvertisedService(new_service);
   BLE.addService(new_service);
   control_characteristic.writeValue((uint8_t)-1);
+  control_characteristic.setEventHandler(BLEWritten, handleCommandStatic);
   BLE.advertise();
   
   Serial.println(new_service.characteristicCount());
@@ -62,6 +66,10 @@ void BluetoothManager::process() {
       last_report_time_ = current_time;
     }
   }
+}
+
+void BluetoothManager::handleCommandStatic(BLEDevice central, BLECharacteristic chr) {
+  instance->handleCommand(central, chr);
 }
 
 void BluetoothManager::handleCommand(BLEDevice central, BLECharacteristic chr) {

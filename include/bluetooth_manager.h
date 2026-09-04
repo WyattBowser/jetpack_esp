@@ -18,6 +18,9 @@ public:
   void handleCommand(BLEDevice central, BLECharacteristic chr);
 
 private:
+  static BluetoothManager* instance;
+  static void handleCommandStatic(BLEDevice central, BLECharacteristic chr);
+
   BLEDevice central;
   const char* SERVICE_UUID = "69420";
 
