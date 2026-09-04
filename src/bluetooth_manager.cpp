@@ -25,6 +25,9 @@ void BluetoothManager::init() {
   new_service.addCharacteristic(control_characteristic);
   Serial.print("Service now has characteristic: ");
   Serial.println(new_service.characteristic(CONTROL_UUID).uuid());
+  new_service.addCharacteristic(state_characteristic);
+  Serial.print("Service now has characteristic: ");
+  Serial.println(new_service.characteristic(STATE_UUID).uuid());
 
   BLE.setAdvertisedService(new_service);
   BLE.addService(new_service);
