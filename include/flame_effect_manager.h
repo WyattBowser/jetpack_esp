@@ -1,4 +1,4 @@
-#include "jetpack_state.h"
+#include "jetpack_deps/common.h"
 #include "flame_led_ring_controller.h"
 #include "Adafruit_NeoPixel.h"
 class FlameEffectManager {

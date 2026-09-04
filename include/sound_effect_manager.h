@@ -1,7 +1,7 @@
 #pragma once
 #include <Arduino.h>
 #include <DFRobotDFPlayerMini.h>
-#include "jetpack_state.h"
+#include "jetpack_deps/common.h"
 
 enum SFX {
   FULL_CYCLE, //In charge of ENTIRE cycle

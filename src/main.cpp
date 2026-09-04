@@ -1,6 +1,6 @@
 #include <Arduino.h>
 
-#include "jetpack_state.h"
+#include "jetpack_deps/common.h"
 #include "state_processor.h"
 #include "sound_effect_manager.h"
 #include "fog_machine_manager.h"

@@ -1,6 +1,6 @@
 #include <ArduinoBLE.h>
-#include <jetpack_state.h>
-#include <state_processor.h>
+#include "jetpack_deps/common.h"
+#include "state_processor.h"
 
 class StateProcessor;
 

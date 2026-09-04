@@ -1,6 +1,6 @@
 #pragma once
 #include <Arduino.h>
-#include "jetpack_state.h"
+#include "jetpack_deps/common.h"
 #include "async_servo.h"
 class VariableNozzleManager {
 public:
