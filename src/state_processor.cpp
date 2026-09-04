@@ -3,21 +3,6 @@
 StateProcessor::StateProcessor(JetpackState& state) : shared_jetpack_state(state), last_state(state){};
 
 void StateProcessor::process() {
-  /*
-  if (shared_jetpack_state == DISARMED) { return; }
-  if (user_triggered_spool_down) {
-    Serial.println("User Triggered Spooldown"); 
-    if (shared_jetpack_state == SPOOLING_DOWN) {
-      shared_jetpack_state = DISARMED;
-    } else {
-      shared_jetpack_state = SPOOLING_DOWN;
-    }
-    initNewState();
-    user_triggered_spool_down = false;
-    return;
-  }
-  */
-
   if(last_state != shared_jetpack_state) {
     initNewState();
   }

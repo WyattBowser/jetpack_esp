@@ -21,7 +21,7 @@ private:
 
   const JetpackState& shared_jetpack_state;
   JetpackState last_state;
-  bool user_triggered_spool_down{false};
 
+  SFX stateToSound(JetpackState state);
   void playSound(SFX sfx);
 };

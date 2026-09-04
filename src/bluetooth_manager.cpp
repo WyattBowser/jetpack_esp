@@ -58,10 +58,15 @@ void BluetoothManager::process() {
       }
     } else {
       if (last_connection_state != DISCONNECTED) {
-        Serial.println("Jetpack BT Disconnected from Bracer");
         last_connection_state = DISCONNECTED;
+        Serial.println("Jetpack BT Disconnected from Bracer");
+        state_processor.triggerForcedDisarm();
       }
       //Terminate everything for safety
     }
+  } if (!central.connected() && last_connection_state != DISCONNECTED) {
+        last_connection_state = DISCONNECTED;
+        Serial.println("Jetpack BT Disconnected from Bracer");
+        state_processor.triggerForcedDisarm();
   }
 }

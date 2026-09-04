@@ -35,6 +35,9 @@ void FlameEffectManager::process() {
     case SPOOLING_DOWN:
       turnOff();
       break;
+    case DISARMED:
+      turnOff();
+      break;
   }
 }
 

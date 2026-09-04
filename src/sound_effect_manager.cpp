@@ -22,25 +22,9 @@ void SoundEffectManager::process() {
     last_state = shared_jetpack_state;
   }
 
-  if(user_triggered_spool_down) {
-    Serial.println("SFX User Triggered SPooldown");
-    if (last_state == SPOOLING_DOWN) {
-      playSound(DISARM);
-    } else {
-      playSound(SPOOL_DOWN);
-    }
-    user_triggered_spool_down = false;
-    return;
-  }
-
-  switch(last_state) {
-    case SPOOLING_UP:
-      playSound(FULL_CYCLE);
-      break;
-    case DISARMED:
-      //Make sure all sound is done
-      playSound(DISARM);
-      break;
+  //We dont handle ARMED state as there its sound effect is baked into the full cycle sound effect
+  if (last_state != ARMED) {
+    playSound(stateToSound(last_state));
   }
 }
 
@@ -57,10 +41,22 @@ void SoundEffectManager::playSound(SFX sound) {
       break;
     case DISARM:
       Serial.println("SFX playing No sound");
+      player.stop();
       break;
+    default:
+      Serial.print("SFX tried playing unknown sfx: ");
+      Serial.println(sound);
   }
 }
 
-void SoundEffectManager::userTriggeredSpooldown() {
-  user_triggered_spool_down = true;
+SFX SoundEffectManager::stateToSound(JetpackState state) {
+  switch(state) {
+    case JetpackState::SPOOLING_UP: return SFX::FULL_CYCLE;
+    case JetpackState::SPOOLING_DOWN: return SFX::SPOOL_DOWN;
+    case JetpackState::DISARMED: return SFX::DISARM;
+    default:
+      Serial.print("SFX Manager cannot handle jetpack state: ");
+      Serial.println(state);
+      return SFX::DISARM;
+  }
 }
