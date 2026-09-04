@@ -1,0 +1,3 @@
+[submodule "include/jetpack_deps"]
+	path = include/jetpack_deps
+	url = https://github.com/WyattBowser/jetpack_deps.git
