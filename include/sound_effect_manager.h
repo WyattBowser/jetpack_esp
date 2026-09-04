@@ -3,12 +3,6 @@
 #include <DFRobotDFPlayerMini.h>
 #include "jetpack_deps/common.h"
 
-enum SFX {
-  FULL_CYCLE, //In charge of ENTIRE cycle
-  SPOOL_DOWN, //Usually only used when user calls early spooldown
-  DISARM  //Resting state
-};
-
 class SoundEffectManager {
 public:
   SoundEffectManager(JetpackState& state);
@@ -22,6 +16,5 @@ private:
   const JetpackState& shared_jetpack_state;
   JetpackState last_state;
 
-  SFX stateToSound(JetpackState state);
-  void playSound(SFX sfx);
+  void playSoundFromState(JetpackState sfx);
 };

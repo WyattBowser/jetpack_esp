@@ -8,7 +8,7 @@
 #include "variable_nozzle_manager.h"
 #include "bluetooth_manager.h"
 
-JetpackState current_state = DISARMED;
+JetpackState current_state = JetpackState::DISARMED;
 StateProcessor state_processor(current_state);
 SoundEffectManager sfx_manager(current_state);
 FogMachineManager fog_manager(current_state);

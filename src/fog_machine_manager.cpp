@@ -10,15 +10,15 @@ void FogMachineManager::process() {
   last_state = shared_jetpack_state;
 
   switch (last_state) {
-    case SPOOLING_UP:
+    case JetpackState::SPOOLING_UP:
       turnOn();
       break;
 
-    case SPOOLING_DOWN:
+    case JetpackState::SPOOLING_DOWN:
       turnOff();
       break;
 
-    case DISARMED:
+    case JetpackState::DISARMED:
       turnOff();
       break;
   }

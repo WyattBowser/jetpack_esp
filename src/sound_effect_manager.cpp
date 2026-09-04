@@ -24,39 +24,27 @@ void SoundEffectManager::process() {
 
   //We dont handle ARMED state as there its sound effect is baked into the full cycle sound effect
   if (last_state != ARMED) {
-    playSound(stateToSound(last_state));
+    playSoundFromState(last_state);
   }
 }
 
-void SoundEffectManager::playSound(SFX sound) {
-  //player.stop();
-  switch (sound) {
-    case FULL_CYCLE:
-      Serial.println("SFX playing Full Cycle");
+void SoundEffectManager::playSoundFromState(JetpackState state) {
+  Serial.print("SFX playing sound for: ");
+  Serial.println(toString(state));
+  switch (state) {
+    case JetpackState::SPOOLING_UP:
       player.play(1);
       break;
-    case SPOOL_DOWN:
-      Serial.println("SFX playing Spool Down");
+    case JetpackState::ARMED:
+      Serial.println("SFX does not do anything for armed state");
+      break;
+    case JetpackState::SPOOLING_DOWN:
       player.play(2);
       break;
-    case DISARM:
-      Serial.println("SFX playing No sound");
+    case JetpackState::DISARMED:
       player.stop();
       break;
     default:
-      Serial.print("SFX tried playing unknown sfx: ");
-      Serial.println(sound);
-  }
-}
-
-SFX SoundEffectManager::stateToSound(JetpackState state) {
-  switch(state) {
-    case JetpackState::SPOOLING_UP: return SFX::FULL_CYCLE;
-    case JetpackState::SPOOLING_DOWN: return SFX::SPOOL_DOWN;
-    case JetpackState::DISARMED: return SFX::DISARM;
-    default:
-      Serial.print("SFX Manager cannot handle jetpack state: ");
-      Serial.println(state);
-      return SFX::DISARM;
+      Serial.print("SFX tried playing unknown sfx. Skipping");
   }
 }

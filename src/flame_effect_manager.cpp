@@ -29,13 +29,15 @@ void FlameEffectManager::process() {
   Serial.println("Flame effect manager sensed state change");
 
   switch(last_state) {
-    case ARMED:
-      Serial.println("Flame Effect: ARMED");
+    case JetpackState::ARMED:
+      Serial.println("Flame Effect: ARMED_STATE");
       break;
-    case SPOOLING_DOWN:
+    case JetpackState::SPOOLING_DOWN:
+      Serial.println("Flame Effect: SPOOLING_DOWN");
       turnOff();
       break;
-    case DISARMED:
+    case JetpackState::DISARMED:
+      Serial.println("Flame Effect: DISARMED_STATE");
       turnOff();
       break;
   }

@@ -1,7 +1,10 @@
 #include "bluetooth_manager.h"
 
 BluetoothManager::BluetoothManager(StateProcessor& state_proc, JetpackState& state) :
-  state_processor(state_proc), current_state(state), control_characteristic(CHARACTERISTIC_UUID, BLERead | BLEWrite) {
+  state_processor(state_proc), 
+  current_state(state),
+  control_characteristic(CONTROL_UUID, BLEWrite),
+  state_characteristic(STATE_UUID, BLERead | BLENotify) {
     last_connection_state = DISCONNECTED;
 }
 
@@ -12,13 +15,13 @@ void BluetoothManager::init() {
   Serial.print("Local Name set to: ");
   Serial.println(LOCAL_NAME);
 
-  BLEService new_service("69420");
+  BLEService new_service(SERVICE_UUID);
   Serial.print("Service created: ");
   Serial.println(new_service.uuid());
 
   new_service.addCharacteristic(control_characteristic);
   Serial.print("Service now has characteristic: ");
-  Serial.println(new_service.characteristic("6969").uuid());
+  Serial.println(new_service.characteristic(CONTROL_UUID).uuid());
 
   BLE.setAdvertisedService(new_service);
   BLE.addService(new_service);
@@ -37,36 +40,46 @@ void BluetoothManager::process() {
         Serial.println("Jetpack BT is now connected to bracer");
         last_connection_state = CONNECTED;
       }
-
-      if (control_characteristic.written()) {
-        int control = (int)control_characteristic.value();
-        switch (control) {
-          case JetpackState::SPOOLING_UP:
-            Serial.println("Jetpack BT got command to spool up");
-            state_processor.triggerSpoolUp();
-            break;
-          case JetpackState::SPOOLING_DOWN:
-            Serial.println("Jetpack BT got command to spool down");
-            state_processor.triggerSpoolDown();
-            break;
-          case JetpackState::DISARMED:
-            Serial.println("Jetpack BT got command to force stop");
-            //hard stop everything
-            state_processor.triggerForcedDisarm();
-            break;
-        }
-      }
     } else {
       if (last_connection_state != DISCONNECTED) {
         last_connection_state = DISCONNECTED;
-        Serial.println("Jetpack BT Disconnected from Bracer");
+        Serial.println("Jetpack BT has central, but has disconnected");
         state_processor.triggerForcedDisarm();
       }
-      //Terminate everything for safety
     }
-  } if (!central.connected() && last_connection_state != DISCONNECTED) {
-        last_connection_state = DISCONNECTED;
-        Serial.println("Jetpack BT Disconnected from Bracer");
-        state_processor.triggerForcedDisarm();
   }
+  
+  if (!central.connected() && last_connection_state != DISCONNECTED) {
+      last_connection_state = DISCONNECTED;
+      Serial.println("Jetpack BT has central, but never connected");
+      state_processor.triggerForcedDisarm();
+  }
+
+  if (central && central.connected()) {
+    unsigned long current_time = millis();
+    if (current_time - last_report_time_ > STATE_REPORT_TIMEOUT_MS) {
+      state_characteristic.writeValue(current_state);
+      last_report_time_ = current_time;
+    }
+  }
+}
+
+void BluetoothManager::handleCommand(BLEDevice central, BLECharacteristic chr) {
+  JetpackCommand command = (JetpackCommand)control_characteristic.value();
+      Serial.print("Jetpack BT got command: ");
+      Serial.println(toString(command));
+      switch (command) {
+        case JetpackCommand::FULL_CYCLE:
+          state_processor.triggerSpoolUp();
+          break;
+        case JetpackCommand::SPOOL_DOWN:
+          state_processor.triggerSpoolDown();
+          break;
+        case JetpackCommand::STOP:
+          //hard stop everything
+          state_processor.triggerForcedDisarm();
+          break;
+        default:
+          Serial.println("Jetpack BT cannot handle command. Skipping");
+      }
 }
