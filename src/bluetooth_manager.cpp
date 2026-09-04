@@ -5,8 +5,8 @@ BluetoothManager* BluetoothManager::instance = nullptr;
 BluetoothManager::BluetoothManager(StateProcessor& state_proc, JetpackState& state) :
   state_processor(state_proc),
   current_state(state),
-  control_characteristic(CONTROL_UUID, BLEWrite),
-  state_characteristic(STATE_UUID, BLERead | BLENotify) {
+  control_characteristic(JETPACK_CONTROL_UUID, BLEWrite),
+  state_characteristic(JETPACK_STATE_UUID, BLERead | BLENotify) {
     last_connection_state = DISCONNECTED;
     instance = this;
 }
@@ -14,9 +14,9 @@ BluetoothManager::BluetoothManager(StateProcessor& state_proc, JetpackState& sta
 void BluetoothManager::init() {
   BLE.begin();
   delay(250);
-  BLE.setLocalName(LOCAL_NAME);
+  BLE.setLocalName(JETPACK_LOCAL_NAME);
   Serial.print("Local Name set to: ");
-  Serial.println(LOCAL_NAME);
+  Serial.println(JETPACK_LOCAL_NAME);
 
   BLEService new_service(SERVICE_UUID);
   Serial.print("Service created: ");
@@ -24,10 +24,10 @@ void BluetoothManager::init() {
 
   new_service.addCharacteristic(control_characteristic);
   Serial.print("Service now has characteristic: ");
-  Serial.println(new_service.characteristic(CONTROL_UUID).uuid());
+  Serial.println(new_service.characteristic(JETPACK_CONTROL_UUID).uuid());
   new_service.addCharacteristic(state_characteristic);
   Serial.print("Service now has characteristic: ");
-  Serial.println(new_service.characteristic(STATE_UUID).uuid());
+  Serial.println(new_service.characteristic(JETPACK_STATE_UUID).uuid());
 
   BLE.setAdvertisedService(new_service);
   BLE.addService(new_service);
