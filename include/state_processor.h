@@ -16,7 +16,7 @@ private:
 
   unsigned long state_start_time{0};
   static constexpr int NUM_TIMERS{3};      //Spool up, armed, spool down
-  const unsigned long TIMERS[NUM_TIMERS] = {4500, 11500, 5000};
+  const unsigned long TIMERS[NUM_TIMERS] = {4500, 6000, 6000};
   bool user_triggered_spool_down = false;
 
   void initNewState();

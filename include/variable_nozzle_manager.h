@@ -14,6 +14,6 @@ private:
 
   AsyncServo servo;
   int PIN = D0;
-  const int CHOKE_POS = 45;
-  const int OPEN_POS = 90;
+  const int CHOKE_POS = 90;
+  const int OPEN_POS = 35;
 };

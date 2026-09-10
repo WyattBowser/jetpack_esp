@@ -9,7 +9,11 @@ void StateProcessor::process() {
 
   if (millis() - state_start_time > TIMERS[shared_jetpack_state]) {
       if (shared_jetpack_state != DISARMED) {
-      shared_jetpack_state++;
+      if (shared_jetpack_state == USER_SPOOL_DOWN) {
+        shared_jetpack_state = JetpackState::SPOOLING_DOWN;
+      } else {
+        shared_jetpack_state++;
+      }
       initNewState();
     }
   }
@@ -23,7 +27,7 @@ void StateProcessor::initNewState() {
 }
 
 void StateProcessor::triggerSpoolDown() {
-  shared_jetpack_state = SPOOLING_DOWN;
+  shared_jetpack_state = USER_SPOOL_DOWN;
 }
 
 void StateProcessor::triggerSpoolUp() {

@@ -29,7 +29,7 @@ void VariableNozzleManager::process() {
       break;
     case SPOOLING_DOWN:
       //Choke
-      servo.moveTo(CHOKE_POS, 300);
+      servo.moveTo(CHOKE_POS, 1);
       break;
   }
 }

@@ -38,9 +38,12 @@ void SoundEffectManager::playSoundFromState(JetpackState state) {
     case JetpackState::ARMED:
       Serial.println("SFX does not do anything for armed state");
       break;
-    case JetpackState::SPOOLING_DOWN:
+    case JetpackState::USER_SPOOL_DOWN:
       player.play(2);
       break;
+    case JetpackState::SPOOLING_DOWN:
+      Serial.println("SFX does not do anything for Spool down state");
+      break; //Do nothing herer. The master sound clip has the spool down sfx alread in it
     case JetpackState::DISARMED:
       player.stop();
       break;
